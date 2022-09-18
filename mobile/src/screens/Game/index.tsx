@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { FlatList, Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, ScrollView, TouchableOpacity, View, Text } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,9 +34,6 @@ export function Game() {
       setDuos(data);
     })
   }, []);
-
-  console.log('duos', duos)
-  console.log('games', game)
 
   return (
     <Background>
@@ -79,9 +76,18 @@ export function Game() {
             renderItem={({ item }) => (
               <DuoCard
                 data={item}
+                onConnect={() => {}}
               />
             )}
             horizontal
+            style={styles.containerList}
+            contentContainerStyle={[duos.length > 0 ? styles.contentList : styles.emptyListContent]}
+            showsHorizontalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <Text style={styles.emptyListText}>
+                Não há anúncios publicados para esse game.
+              </Text>
+            )}
           />
         </ScrollView>
       </SafeAreaView>
