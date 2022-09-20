@@ -14,6 +14,7 @@ import { DuoCard, DuoCardProps } from '../../components/DuoCard';
 
 import { THEME } from '../../theme';
 import { styles } from './styles';
+import { DuoMatch } from '../../components/DuoMatch';
 
 export function Game() {
   const route = useRoute();
@@ -22,9 +23,18 @@ export function Game() {
   const navitation = useNavigation();
 
   const [duos, setDuos] = useState<DuoCardProps[]>([]);
+  const [discordDuoSelected, setDiscordDuoSelected] = useState('');
 
   function handleGoBack() {
     navitation.goBack();
+  }
+
+  async function getDiscordUser(adsIS: string) {
+    await fetch(`http://localhost:3333/ads/${adsIS}/discord`)
+    .then(res => res.json())
+    .then(data => {
+      setDiscordDuoSelected(data.discord)
+    })
   }
 
   useEffect(() => {
@@ -76,7 +86,7 @@ export function Game() {
             renderItem={({ item }) => (
               <DuoCard
                 data={item}
-                onConnect={() => {}}
+                onConnect={() => getDiscordUser(item.id)}
               />
             )}
             horizontal
@@ -90,6 +100,12 @@ export function Game() {
             )}
           />
         </ScrollView>
+
+        <DuoMatch
+          visible={discordDuoSelected.length > 0}
+          discord={discordDuoSelected}
+          onClose={() => setDiscordDuoSelected('')}
+        />
       </SafeAreaView>
     </Background>
   );
